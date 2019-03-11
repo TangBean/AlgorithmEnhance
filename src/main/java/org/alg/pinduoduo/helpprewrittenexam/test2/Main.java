@@ -1,4 +1,4 @@
-package org.alg.pinduoduo.helpwrittenexam.test2;
+package org.alg.pinduoduo.helpprewrittenexam.test2;
 
 import java.util.HashMap;
 import java.util.Scanner;
