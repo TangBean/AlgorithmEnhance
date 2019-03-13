@@ -1,5 +1,6 @@
 package org.alg.baidu.nowcoder2018.xuliehebing;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -23,9 +24,38 @@ public class Main {
         PriorityQueue<Integer> heap = new PriorityQueue<>(n, new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
-                return 0;
+                return o2 - o1;
             }
         });
-        return 0;
+        int[] cur = new int[k];
+        Arrays.fill(cur, 1);
+        boolean end = false;
+        while (!end) {
+            end = true;
+            for (int i = 0; i < k; i++) {
+                int curRes = func(cur[i], coefficient[i]);
+                if (heap.size() < n) {
+                    heap.offer(curRes);
+                    cur[i]++;
+                    end = false;
+                } else {
+                    if (curRes < heap.peek()) {
+                        heap.poll();
+                        heap.offer(curRes);
+                        cur[i]++;
+                        end = false;
+                    }
+                }
+            }
+        }
+        return heap.peek();
+    }
+
+    private static int func(int n, int[] coefficient) {
+        int res = 0;
+        for (int i = 0; i < 8; i++) {
+            res += coefficient[7 - i] * Math.pow(n, i);
+        }
+        return res;
     }
 }
