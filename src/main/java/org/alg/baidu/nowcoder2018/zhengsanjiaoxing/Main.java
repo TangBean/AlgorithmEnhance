@@ -17,6 +17,6 @@ public class Main {
     }
 
     private static double[] getThirdPoints(double[] input) {
-
+        return null;
     }
 }
