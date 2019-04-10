@@ -18,7 +18,6 @@ public class Main {
             int hi = n / (m * 10);
             int cur = n / m % 10;
             int lo = n % m;
-            System.out.println(hi + " " + cur + " " + lo);
             if (x != 0) {
                 if (cur < x) {
                     count += hi * m;  // 如求 1~728 中十位7的个数，则为 7*10 个
@@ -28,7 +27,7 @@ public class Main {
                     count += (hi + 1) * m;  // 如求 1~728 中个位 7 的个数，则为 (72+1)*1=73
                 }
             } else {
-                if (cur == 0) {
+                if (cur != 0) {
                     count += hi * m;
                 } else {
                     count += (hi - 1) * m + lo + 1;
