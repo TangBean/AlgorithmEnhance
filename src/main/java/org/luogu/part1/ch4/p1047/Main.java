@@ -1,15 +1,21 @@
 package org.luogu.part1.ch4.p1047;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * 本质上说，有 3 种可能：
- * 1. 新加入的区间包含在原来的区间中，无需改变 subway 区间集合
- * 2. 新加入的区间是一个独立的区间，把它插入 subway 区间即可
- * 3. 新加入的区间横跨了 subway 区间，subway 区间需要进行区间合并（最难处理！）
+ * 这道题本质上讲是一道区间合并的题
+ * 1. 先对输入的区间按照区间的开始点进行排序
+ * 2. 对已排好序的区间进行合并，合并原则：
+ *     1. subway[i][1] < subway[i+1][0]
+ *         - 当前区间不与下一个区间重合，当前区间已经结束，直接跳到下一区间即可
+ *         - i++
+ *     2. subway[i+1][0] <= subway[i][1] < subway[i+1][1]
+ *         - 下一个区间的范围超过了当前区间，将当前区间的结束点设置为下一个区间的结束点，并将下一个区间删除
+ *         - subway[i][1] = subway[i+1][1]
+ *           subway.remove(i+1)
+ *     3. subway[i][1] >= subway[i+1][1]
+ *         - 当前区间完全包括了下一个区间，直接将下一个区间移除即可
+ *         - subway.remove(i+1)
  */
 public class Main {
     public static void main(String[] args) {
@@ -18,37 +24,28 @@ public class Main {
         int M = in.nextInt();
         LinkedList<int[]> subway = new LinkedList<>();
         for (int i = 0; i < M; i++) {
-            int lo = in.nextInt(), hi = in.nextInt();
-            if (subway.isEmpty() || lo > subway.getLast()[1]) {
-                subway.add(new int[]{lo, hi});
-                continue;
+            subway.add(new int[]{in.nextInt(), in.nextInt()});
+        }
+        subway.sort(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
             }
-            if (lo >= subway.getLast()[0] && hi > subway.getLast()[1]) {
-                subway.getLast()[1] = hi;
-                continue;
-            }
-
-            int j = 0;
-            while (j < subway.size() - 1 && lo < subway.get(j + 1)[0]) {
-                j++;
-            }
-            if (lo > subway.get(j)[1] && hi < subway.get(j + 1)[0]) {
-                subway.add(j + 1, new int[]{lo, hi});
-                continue;
-            }
-            if (hi > subway.get(j)[1]) {
-                subway.get(j++)[1] = hi;
-            }
-            while (j < subway.size() && subway.get(j)[1] <= hi) {
-                subway.remove(j);
-            }
-            if (j != subway.size() && hi >= subway.get(j)[0]) {
-                subway.get(j - 1)[1] = subway.get(j)[1];
-                subway.remove(j);
+        });
+        int i = 0;
+        while (i < subway.size() - 1) {
+            if (subway.get(i)[1] >= subway.get(i + 1)[1]) {
+                subway.remove(i + 1);
+            } else if (subway.get(i)[1] >= subway.get(i + 1)[0]) {
+                subway.get(i)[1] = subway.get(i + 1)[1];
+                subway.remove(i + 1);
+            } else {
+                i++;
             }
         }
         for (int[] interval : subway) {
             L -= interval[1] - interval[0] + 1;
         }
+        System.out.println(L);
     }
 }
