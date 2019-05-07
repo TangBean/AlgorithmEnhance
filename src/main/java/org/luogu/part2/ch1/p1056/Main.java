@@ -23,7 +23,7 @@ public class Main {
                     KMap.put(separate, 1);
                 }
             } else {
-                int separate = Math.min(x1, x2);
+                int separate = Math.min(y1, y2);
                 if (LMap.containsKey(separate)) {
                     LMap.put(separate, LMap.get(separate) + 1);
                 } else {
@@ -49,10 +49,10 @@ public class Main {
 
         TreeSet<Integer> KRes = new TreeSet<>();
         TreeSet<Integer> LRes = new TreeSet<>();
-        for (int k = 0; k < K; k++) {
+        for (int k = 0; k < Math.min(KList.size(), K); k++) {
             KRes.add(KList.get(k).getKey());
         }
-        for (int l = 0; l < L; l++) {
+        for (int l = 0; l < Math.min(LList.size(), L); l++) {
             LRes.add(LList.get(l).getKey());
         }
 
