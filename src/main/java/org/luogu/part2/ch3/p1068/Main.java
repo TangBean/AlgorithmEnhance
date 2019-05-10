@@ -1,8 +1,6 @@
 package org.luogu.part2.ch3.p1068;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static class Examinee {
@@ -27,33 +25,25 @@ public class Main {
         PriorityQueue<Examinee> passer = new PriorityQueue<>(m, new Comparator<Examinee>() {
             @Override
             public int compare(Examinee o1, Examinee o2) {
-                return (o1.score == o2.score) ? o2.no_ - o1.no_ : o1.score - o2.score;
+                return (o1.score == o2.score) ? o1.no_ - o2.no_ : o2.score - o1.score;
             }
         });
         for (int i = 0; i < n; i++) {
-            int cur_no_ = in.nextInt(), cur_score = in.nextInt();
-            if (passer.size() < m) {
-                passer.offer(new Examinee(cur_no_, cur_score));
-            }
-            else {
-                if (cur_score > passer.peek().score) {
-                    passer.poll();
-                    passer.offer(new Examinee(cur_no_, cur_score));
-                } else if (cur_score == passer.peek().score) {
-                    passer.offer(new Examinee(cur_no_, cur_score));
-                }
-            }
+            passer.offer(new Examinee(in.nextInt(), in.nextInt()));
         }
 
-        int nums = passer.size();
-        Examinee[] passerList = new Examinee[nums];
-        for (int i = nums - 1; i >= 0; i--) {
-            passerList[i] = passer.poll();
+        List<Examinee> passerList = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            passerList.add(passer.poll());
+        }
+        while (passer.peek().score == passerList.get(m - 1).score) {
+            passerList.add(passer.poll());
         }
 
-        System.out.println(passerList[nums - 1].score + " " + nums);
-        for (int i = 0; i < nums; i++) {
-            System.out.println(passerList[i]);
+        int nums = passerList.size();
+        System.out.println(passerList.get(nums - 1).score + " " + nums);
+        for (Examinee examinee : passerList) {
+            System.out.println(examinee);
         }
     }
 }
