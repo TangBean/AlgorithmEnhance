@@ -30,10 +30,10 @@ public class Main {
         }
         for (int i = 0; i < N; i++) {
             if (!col[i]) {
-                int fdIndex = N - 1 + i - row;
-                int sdIndex = N - 1 + N - i - 1 - row;
+                int fdIndex = N - 1 + row - i;
+                int sdIndex = row + i;
                 if (firstDiag[fdIndex] || secondDiag[sdIndex]) {
-                    return;
+                    continue;
                 }
                 col[i] = true;
                 firstDiag[fdIndex] = true;
