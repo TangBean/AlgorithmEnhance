@@ -1,7 +1,16 @@
 package org.luogu.part2.ch7.p1019;
 
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.util.Scanner;
 
+/**
+ * 要注意此题使用的是最小匹配原则，即 abababab 的自匹配为 ababab[ab]ababab，匹配的为中间的 ab！
+ *
+ * 解题思路：
+ * 首先，这是一道 DFS 的题是肯定的了，重点在于这个前缀的保存问题，因为我们只需要得到最大的拼接长度，
+ * 也就是说，我们不需要知道前缀是什么，只需要知道前缀的长度即可，
+ * 所以，我们可以使用一个二维数组 overlap 来保存 words[k] 和 words[i] (i = 0~N) 的匹配前缀长度即可！
+ */
 public class Main {
     private static int maxRes = 0;
 
@@ -48,15 +57,12 @@ public class Main {
     }
 
     private static int getOverlap(String left, String right) {
-        int maxLen = Math.min(left.length(), right.length());
+        int maxLen = 1;
         int Nl = left.length(), Nr = right.length();
-        if (!left.equals(right) && left.substring(Nl - maxLen, Nl).equals(right.substring(0, maxLen))) {
-            return 0;
+        int minLen = Math.min(Nl, Nr);
+        while (maxLen < minLen && !left.substring(Nl - maxLen, Nl).equals(right.substring(0, maxLen))) {
+            maxLen++;
         }
-        maxLen--;
-        while (maxLen > 0 && !left.substring(Nl - maxLen, Nl).equals(right.substring(0, maxLen))) {
-            maxLen--;
-        }
-        return maxLen;
+        return (maxLen == Nl || maxLen == Nr) ? 0 : maxLen;
     }
 }
