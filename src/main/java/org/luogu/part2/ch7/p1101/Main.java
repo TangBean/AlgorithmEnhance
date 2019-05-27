@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+    private static int WORD_LEN = 7;
     private static char[] word = {'y', 'i', 'z', 'h', 'o', 'n', 'g'};
 
     public static void main(String[] args) {
@@ -21,7 +22,16 @@ public class Main {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                dfs(matrix, res, i, j, 0, N);
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        if (dx == 0 && dy == 0) {
+                            continue;
+                        }
+                        if (matrix[i][j] == word[0]) {
+                            findWord(matrix, res, i, j, dx, dy, N);
+                        }
+                    }
+                }
             }
         }
 
@@ -30,26 +40,22 @@ public class Main {
         }
     }
 
-    private static boolean dfs(char[][] matrix, char[][] res, int x, int y, int w, int N) {
-        if (w == word.length) {
-            return true;
+    private static void findWord(char[][] matrix, char[][] res, int x, int y, int dx, int dy, int N) {
+        int maxX = x + (WORD_LEN - 1) * dx, maxY = y + (WORD_LEN - 1) * dy;
+        if (maxX < 0 || maxX >= N || maxY < 0 || maxY >= N) {
+            return;
         }
-        if (x < 0 || x >= N || y < 0 || y >= N || matrix[x][y] != word[w]) {
-            return false;
-        }
-        res[x][y] = matrix[x][y];
-        boolean succeed = false;
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (i == 0 && j == 0) {
-                    continue;
-                }
-                succeed = succeed || dfs(matrix, res, x + i, y + j, w + 1, N);
+        boolean succeed = true;
+        for (int i = 1; i < WORD_LEN; i++) {
+            if (matrix[x + i * dx][y + i * dy] != word[i]) {
+                succeed = false;
+                break;
             }
         }
-        if (!succeed) {
-            res[x][y] = '*';
+        if (succeed) {
+            for (int i = 0; i < WORD_LEN; i++) {
+                res[x + i * dx][y + i * dy] = word[i];
+            }
         }
-        return succeed;
     }
 }
