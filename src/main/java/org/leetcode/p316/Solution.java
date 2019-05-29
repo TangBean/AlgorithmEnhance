@@ -26,15 +26,25 @@ public class Solution {
         Deque<Character> suspend = new LinkedList<>();
         int j = 0;
         for (int i = 0; i < sArr.length && j < resLen; i++) {
+            if (times[sArr[i] - 'a'] < 0) {
+                continue;
+            }
             times[sArr[i] - 'a']--;
             if (times[sArr[i] - 'a'] == 0) {
-                while (!suspend.isEmpty()) {
-                    char tmp = suspend.poll();
-                    if (tmp < sArr[i]) {
-                        res[j++] = tmp;
-                    }
+                while (!suspend.isEmpty() && suspend.peekFirst() < sArr[i]) {
+                    char tmp = suspend.pollFirst();
+                    res[j++] = tmp;
+                    times[tmp - 'a'] = -1;
                 }
-                res[j++] = sArr[i];
+                if (!suspend.isEmpty() && suspend.peekFirst() == sArr[i]) {
+                    suspend.pollFirst();
+                } else {
+                    suspend.clear();
+                }
+                if (j < resLen) {
+                    res[j++] = sArr[i];
+                    times[sArr[i] - 'a'] = -1;
+                }
                 continue;
             }
             while (!suspend.isEmpty() && suspend.peekLast() >= sArr[i]) {
@@ -52,7 +62,9 @@ public class Solution {
         Solution s = new Solution();
 //        String input = "cbacdcbc";
 //        String input = "c";
-        String input = "ccacbaba";
+//        String input = "ccacbaba";
+//        String input = "abacb";
+        String input = "cbacdcbc";
         System.out.println(s.removeDuplicateLetters(input));
     }
 }
