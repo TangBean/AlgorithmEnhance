@@ -12,48 +12,33 @@ public class Solution {
         char[] sArr = s.toCharArray();
 
         // 先统计所有出现过的字符的个数
-        int resLen = 0;
         int[] times = new int[26];
         for (int i = 0; i < sArr.length; i++) {
-            int curI = sArr[i] - 'a';
-            if (times[curI] == 0) {
-                resLen++;
+            times[sArr[i] - 'a']++;
+        }
+        boolean[] visited = new boolean[26];
+
+        Stack<Character> stack = new Stack<>();
+        char bottom = '0';
+        stack.push(bottom);
+        for (int i = 0; i < sArr.length; i++) {
+            if (visited[sArr[i] - 'a'] && times[sArr[i] - 'a'] != 1) {
+                continue;
             }
-            times[curI]++;
+            visited[sArr[i] - 'a'] = true;
+            while (stack.peek() != bottom && stack.peek() >= sArr[i]) {
+                visited[stack.pop() - 'a'] = false;
+            }
+            if (times[sArr[i] - 'a'] == 1) {
+                bottom = sArr[i];
+            }
+            stack.push(sArr[i]);
+            times[sArr[i] - 'a']--;
         }
 
-        char[] res = new char[resLen];
-        Deque<Character> suspend = new LinkedList<>();
-        int j = 0;
-        for (int i = 0; i < sArr.length && j < resLen; i++) {
-            if (times[sArr[i] - 'a'] < 0) {
-                continue;
-            }
-            times[sArr[i] - 'a']--;
-            if (times[sArr[i] - 'a'] == 0) {
-                while (!suspend.isEmpty() && suspend.peekFirst() < sArr[i]) {
-                    char tmp = suspend.pollFirst();
-                    res[j++] = tmp;
-                    times[tmp - 'a'] = -1;
-                }
-                if (!suspend.isEmpty() && suspend.peekFirst() == sArr[i]) {
-                    suspend.pollFirst();
-                } else {
-                    suspend.clear();
-                }
-                if (j < resLen) {
-                    res[j++] = sArr[i];
-                    times[sArr[i] - 'a'] = -1;
-                }
-                continue;
-            }
-            while (!suspend.isEmpty() && suspend.peekLast() >= sArr[i]) {
-                suspend.pollLast();
-            }
-            suspend.offer(sArr[i]);
-        }
-        while (!suspend.isEmpty()) {
-            res[j++] = suspend.poll();
+        char[] res = new char[stack.size() - 1];
+        for (int i = stack.size() - 2; i >= 0; i--) {
+            res[i] = stack.pop();
         }
         return new String(res);
     }
@@ -64,7 +49,8 @@ public class Solution {
 //        String input = "c";
 //        String input = "ccacbaba";
 //        String input = "abacb";
-        String input = "cbacdcbc";
+//        String input = "cbacdcbc";
+        String input = "eywdgenmcnzhztolafcfnirfpuxmfcenlppegrcalgxjlajxmphwidqqtrqnmmbssotoywfrtylm";
         System.out.println(s.removeDuplicateLetters(input));
     }
 }
