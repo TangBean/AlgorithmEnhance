@@ -3,8 +3,12 @@ package org.leetcode.p316;
 import java.util.*;
 
 /**
- * 全排列的非递归和递归解法：https://www.cnblogs.com/pmars/p/3458289.html
- *
+ * 解题思路：
+ * - 使用 Stack
+ * - 如果当前元素已经访问过了，就将它的次数 -1，然后跳过
+ * - 如果当前元素还没有被访问，看看栈中有没有比当前元素小，并且处于待定状态（次数 != 0 的元素）的元素，
+ *   如果有，说明下一个位置不取这个元素，将它 pop 出去，等到之后再遇到它，要记得将它的 visited 状态修改为 false
+ * - 将当前的元素 push 到栈中，并更新它的 times 和 visited
  */
 public class Solution {
     public String removeDuplicateLetters(String s) {
@@ -22,18 +26,16 @@ public class Solution {
         char bottom = '0';
         stack.push(bottom);
         for (int i = 0; i < sArr.length; i++) {
-            if (visited[sArr[i] - 'a'] && times[sArr[i] - 'a'] != 1) {
+            if (visited[sArr[i] - 'a']) {
+                times[sArr[i] - 'a']--;
                 continue;
             }
-            visited[sArr[i] - 'a'] = true;
-            while (stack.peek() != bottom && stack.peek() >= sArr[i]) {
+            while (stack.peek() != bottom && stack.peek() > sArr[i] && times[stack.peek() - 'a'] > 0) {
                 visited[stack.pop() - 'a'] = false;
-            }
-            if (times[sArr[i] - 'a'] == 1) {
-                bottom = sArr[i];
             }
             stack.push(sArr[i]);
             times[sArr[i] - 'a']--;
+            visited[sArr[i] - 'a'] = true;
         }
 
         char[] res = new char[stack.size() - 1];
