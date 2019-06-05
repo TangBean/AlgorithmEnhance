@@ -3,6 +3,9 @@ package org.leetcode.p321;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * DFS will TLE, need another method.
+ */
 public class Solution {
     private int[] maxRes = null;
 
@@ -20,6 +23,51 @@ public class Solution {
         }
     };
 
+    public int[] maxNumber(int[] nums1, int[] nums2, int k) {
+        int N = nums1.length, M = nums2.length;
+        int[] res = new int[k];
+        for (int i = 0; i <= k; i++) {
+            int j = k - i;
+            if (i > N || j > M) {
+                continue;
+            }
+            int[] first = maxKNums(nums1, i);
+            int[] second = maxKNums(nums2, j);
+            int[] cur = merge(first, second);
+            if (comparator.compare(cur, res) > 0) {
+                res = cur;
+            }
+        }
+        return res;
+    }
+
+    private int[] maxKNums(int[] nums, int k) {
+        int[] res = new int[k];
+
+        return res;
+    }
+
+    private int[] merge(int[] nums1, int[] nums2) {
+        int N = nums1.length, M = nums2.length;
+        int[] res = new int[N + M];
+        int i = 0, j = 0;
+        for (int k = 0; k < N + M; k++) {
+            if (i >= N) {
+                res[k] = nums2[j++];
+            } else if (j >= M) {
+                res[k] = nums1[i++];
+            } else {
+                if (nums1[i] > nums2[j]) {
+                    res[k] = nums1[i++];
+                } else {
+                    res[k] = nums2[j++];
+                }
+            }
+        }
+        return res;
+    }
+
+/* DFS method, TLE.
     public int[] maxNumber(int[] nums1, int[] nums2, int k) {
         maxRes = new int[k];
         int[] curNums = new int[k];
@@ -56,7 +104,7 @@ public class Solution {
             curNums[curK] = nums2[i2];
             dfs(nums1, i1, nums2, i2 + 1, k, curK + 1, curNums);
         }
-    }
+    }*/
 
     public static void main(String[] args) {
         Solution s = new Solution();
