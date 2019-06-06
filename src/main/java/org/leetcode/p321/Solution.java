@@ -2,13 +2,12 @@ package org.leetcode.p321;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 /**
  * DFS will TLE, need another method.
  */
 public class Solution {
-    private int[] maxRes = null;
-
     private Comparator<int[]> comparator = new Comparator<int[]>() {
         @Override
         public int compare(int[] o1, int[] o2) {
@@ -43,7 +42,16 @@ public class Solution {
 
     private int[] maxKNums(int[] nums, int k) {
         int[] res = new int[k];
-
+        Arrays.fill(res, -1);
+        int j = 0;
+        for (int i = 0; i < nums.length; i++) {
+            while (nums.length - i > k - j && j > 0 && res[j - 1] < nums[i]) {
+                j--;
+            }
+            if (j < k) {
+                res[j++] = nums[i];
+            }
+        }
         return res;
     }
 
@@ -108,10 +116,10 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums1 = {3, 4, 6, 5};
-        int[] nums2 = {9, 1, 2, 5, 8, 3};
-//        int[] nums1 = {6, 7};
-//        int[] nums2 = {6, 0, 4};
+//        int[] nums1 = {3, 4, 6, 5};
+//        int[] nums2 = {9, 1, 2, 5, 8, 3};
+        int[] nums1 = {6, 7};
+        int[] nums2 = {6, 0, 4};
         int k = 5;
         int[] res = s.maxNumber(nums1, nums2, k);
         System.out.println(Arrays.toString(res));
